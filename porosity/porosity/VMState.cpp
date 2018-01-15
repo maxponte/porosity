@@ -222,12 +222,14 @@ VMState::executeInstruction(
             m_stack[0] = reg;
             break;
         }
-        /*
         case Instruction::CALLDATASIZE:
         {
+            StackRegister reg = { "", "", UserInput, 0, 0 };
+            reg.value = m_data.size();
+            reg.type = UserInput;
+            pushStack(reg);
             break;
         }
-        */
         case Instruction::MSTORE:
         {
             uint32_t offset = int(GetStackEntryById(0).value);
@@ -508,6 +510,13 @@ VMState::executeInstruction(
             popStack(); // info.ret
             break;
         }
+        case Instruction::XOR:
+        {
+            m_stack[0].value = m_stack[0].value ^ m_stack[1].value;
+            m_stack[1] = m_stack[0];
+            popStack(); // info.ret
+            break;
+        }
         case Instruction::EQ:
             // change name
             // change labeltype
@@ -665,13 +674,6 @@ VMState::executeInstruction(
             reg.name = "this";
             reg.type = AddressType | StackRegisterType::UserInputTainted;
             pushStack(reg);
-            break;
-        }
-        case Instruction::XOR:
-        {
-            m_stack[0].value = m_stack[0].value ^ m_stack[1].value;
-            m_stack[1] = m_stack[0];
-            popStack(); // info.ret
             break;
         }
         
