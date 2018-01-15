@@ -667,6 +667,13 @@ VMState::executeInstruction(
             pushStack(reg);
             break;
         }
+        case Instruction::XOR:
+        {
+            m_stack[0].value = m_stack[0].value ^ m_stack[1].value;
+            m_stack[1] = m_stack[0];
+            popStack(); // info.ret
+            break;
+        }
         
         default:
             printf("%s: NOT_IMPLEMENTED: %s\n", __FUNCTION__, info.name.c_str());
